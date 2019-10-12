@@ -7,14 +7,12 @@ include('function.php');
 $userID =$_GET['userid'];
 $action=$_GET['action'];
 
-
-$sql = "SELECT b.id, a.mag_id, a.user_id, b.member_id, b.exp_date, b.admin_enabled, b.enabled, b.admin_notes, b.reseller_notes,  b.max_connections, b.is_trial, a.mac, c.id, c.username  as reseller  FROM mag_devices a left join users b on b.id=a.user_id left join reg_users c on b.member_id=c.id WHERE a.user_id = $userID";
-  
+$sql = "SELECT * FROM `users` WHERE `id` = $userID ";
 $result = mysqli_query($db,$sql);
 if ($result->num_rows > 0) {
     // output data of each row
     while ($row = $result->fetch_assoc()) {
-      $mac=base64_decode($row["mac"]);
+        $username = $row["username"];
         $password=$row["password"];
         $expDateNull= $row['exp_date'];
         $expDate=date('Y-m-d', $row['exp_date']);
@@ -36,27 +34,33 @@ if ($action== 'modify') {
     ?>
 
 <div class="alert alert-success" role="alert">
-  MAC Device Updated!
+  Line Updated!
 </div>
 <?php
 } ;?>
-<form action="aftereditmag.php" class="col-sm-10 "  method="post" enctype="multipart/form-data" >
+<form action="aftereditline.php" class="col-sm-10 "  method="post" enctype="multipart/form-data" >
 
   <div class="form-group row" id="UserId">
     <label for="UserId" class="col-sm-2 col-form-label">User ID:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" readonly id="UserId" name="UserId"  value="" placeholder="">
+      <input type="text" class="form-control" readonly id="UserId" name="UserId"  value="<?php echo $userID; ?>" placeholder="">
   
     </div>
   </div>
-  <div class="form-group row" id="mac">
-    <label for="mac" class="col-sm-2 col-form-label">MAC Address:</label>
+  <div class="form-group row" id="username">
+    <label for="UserName" class="col-sm-2 col-form-label">User Name:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" readonly id="mac" name="mac"  value="" placeholder="">
+      <input type="text" class="form-control" id="UserName" name="UserName"  value="<?php echo $username; ?>" placeholder="">
   
     </div>
   </div>
+  <div class="form-group row" id="password">
+    <label for="PassWord" class="col-sm-2 col-form-label">Password:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="PassWord" name="PassWord"  value="<?php echo $password; ?>" placeholder="">
   
+    </div>
+  </div>
   <div class="form-group row">
    
       <label class="col-sm-2 col-form-label" for="reseller">Assign To a Member:</label>
@@ -87,6 +91,41 @@ if ($action== 'modify') {
     </div>
   </div>
    
+
+  <div class="form-group row" id="AllowedIPs " >
+    <label for="AllowedIPs " class="col-sm-2 col-form-label">Allowed IPs:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="AllowedIPs" name="AllowedIPs" value="<?php echo $allowedIps; ?>"  placeholder="">
+    </div>
+  </div>
+  <div class="form-group row" id="AllowedDevice" >
+    <label for="AllowedDevice" class="col-sm-2 col-form-label">Allowed device:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="AllowedDevice" name="AllowedDevice" value="<?php echo $allowedUa; ?>"  placeholder="">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-2">Restreamer</div>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="1" id="Restreamer" name="Restreamer" <?php if($isRestreamer == 1){ echo "checked";} ?> >
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-2">Bypass Limitation</div>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="1" id="Bypass" name="Bypass" <?php if($bypassUa == 1){ echo "checked";} ?> >
+      </div>
+    </div>
+  </div>
+  <div class="form-group row" id="MaxCon" >
+    <label for="MaxCon" class="col-sm-2 col-form-label">Max Connection:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="MaxCon" name="maxConnections" value="<?php echo $maxConnections ; ?>" name="MaxCon" placeholder="">
+    </div>
+  </div>
   <div class="form-group row">
     <div class="col-sm-2">Unlimited</div>
     <div class="col-sm-10">
@@ -139,7 +178,7 @@ if ($action== 'modify') {
 
   <div class="form-group row">
     <div class="col-sm-10">
-      <button type="submit" class="btn btn-primary" value="upload">Edit MAC</button>
+      <button type="submit" class="btn btn-primary" value="upload">Edit Line</button>
     </div>
   </div>
 </form>

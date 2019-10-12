@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 'on');
-   include("config.php");
+include("config.php");
    
    session_start();
    
@@ -26,7 +26,7 @@ ini_set('display_errors', 'on');
         
         $_SESSION['login_idr'] = $row["id"];
          $_SESSION['login_user'] = $myusername;
-         header("location: welcome.php");
+         header("location: index.php");
       }else {
          $error = "Your Login Name or Password is invalid";
       }

@@ -43,9 +43,12 @@ function doSomething() {
     </script>
     <script>
 $(document).ready(function(){
-    $('#myTable').dataTable();
+    $('#myTable').dataTable({
+                "lengthMenu": [[100, 150, 200, -1], [100, 150, 200, "All"]]
+             } );
 });
 </script>
+
    </body>
    
 </html>

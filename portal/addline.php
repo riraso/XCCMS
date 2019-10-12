@@ -1,124 +1,160 @@
 <?php
 include("config.php");
 include('session.php');
+include('template.php');
 include('header.php');
-
-$username =  $_POST["name"];
-$resellerid =$login_session;
-$password = $_POST["password"];
-$bouquest = $_POST['boq'];
-$bouquet_ids = $_POST['boq'];
-$expire_datemonth = $_POST['duration'];
-$is_trial=0;
-if ($expire_datemonth=="0") {
-    $expire_date = strtotime(' + 3 days');
-    $is_trial=1;
-    $amount='0';
-}elseif ($expire_datemonth=="1") {
-    $expire_date = strtotime(' + 30 days');
-} elseif ($expire_datemonth=="3") {
-    $expire_date = strtotime(' + 90 days');
-} elseif ($expire_datemonth=="6") {
-    $expire_date = strtotime(' + 183 days');
-} elseif ($expire_datemonth=="12") {
-    $expire_date = strtotime(' + 365 days');
-}
-$max_connections = 1;
-$reseller = 0;
+include('function.php');
 
 
-###############################################################################
-$post_data = array( 'user_data' => array(
-  'username' => $username,
-  'password' => $password,
-  'max_connections' => $max_connections,
-  'is_restreamer' => $reseller,
-  'exp_date' => $expire_date,
-  'bouquet' => json_encode($bouquet_ids) ,
-  'member_id' => $owner,
+
+if ($action== 'add') {
+    ?>
+
+<div class="alert alert-success" role="alert">
+  Line Added!
+</div>
+<?php
+} ;?>
+<form action="afteraddline.php" class="col-sm-10 "  method="post" enctype="multipart/form-data" >
+
  
-  'is_trial'=> $is_trial));
-
-$opts = array( 'http' => array(
-  'method' => 'POST',
-  'header' => 'Content-type: application/x-www-form-urlencoded',
-  'content' => http_build_query($post_data) ) );
-
-$context = stream_context_create($opts);
-$api_result = json_decode(file_get_contents($panel_url . "api.php?action=user&sub=create", false, $context));
-?>
-
-    <div >
-     <?php
-     if ($username !='') {?>
-     <div class="alert alert-success" role="alert">
-  <strong>USER CREATED</strong>
-</div>
-<div class="alert alert-info" role="alert">
-username: <strong><?php echo $username?></strong><br> Password:<strong><?php echo $password?></strong>
-</div>
-<?php }?>
- </div>
-</div>
-<form action="" method="post">
-            <div class="form-group m-4">
-                <form>
-
-                    <div class="row">
-                        <input type="text" class="form-control mb-2" placeholder="Username" name="name">
-                    </div>
-                    <div class="row">
-                        <input type="text" class="form-control mb-2" placeholder="Uassword" name="password">
-                    </div>
-                    <div class="form-group">
-                        <label for="duration">Package</label>
-                        <select class="form-control" id="duration" name="duration">
-                            <option value="0">Trial</option>
-                            <option value="1">1 Months</option>
-                            <option value="3">3 Months</option>
-                            <option value="6">6 Months</option>
-                            <option value="9">9 Months</option>
-                            <option value="12">12 Months</option>
-                        </select>
-                    </div>
-                    <input type="button" id="select_all" class="btn btn-warning mb-2" name="select_all"
-                        value="Select All">
-                    <input type="button" id="unselect_all" class="btn btn-danger mb-2" name="unselect_all"
-                        value="UNSelect All">
-                    <div class="row" style="height: 600px">
-
-                        <select class="custom-select mb-2" id="countries" name="boq[]" multiple>
-                        <?php
-        $bouquetsq= "SELECT * FROM `bouquets`";
-        $result = mysqli_query($db,$bouquetsq);
+  </div>
+  <div class="form-group row" id="username">
+    <label for="UserName" class="col-sm-2 col-form-label">User Name:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="UserName" name="UserName"  value="<?php echo $username; ?>" placeholder="">
+  
+    </div>
+  </div>
+  <div class="form-group row" id="password">
+    <label for="PassWord" class="col-sm-2 col-form-label">Password:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="PassWord" name="PassWord"  value="<?php echo $password; ?>" placeholder="">
+  
+    </div>
+  </div>
+  <div class="form-group row">
+   
+      <label class="col-sm-2 col-form-label" for="reseller">Assign To a Member:</label>
+      <div class="col-sm-10">
+      <select class="custom-select " id="reseller"  name="reseller">
+        <?php
+        $catagories = "SELECT * FROM `reg_users`";
+        $result = mysqli_query($db,$catagories);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo "<option value='". $row[id]."' selected>". $row[bouquet_name]."</option>";
+                $resSec='';
+                if($login_sessionId == $row[id]){
+                   $resSec="selected";
+                }
+                echo "<option value='". $row[id]."'  $resSec>". $row[username]."</option>";
             }
         }
         ?>
-                        </select>
-                    </div>
-                    <div class="row">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </form>
-
-    
+      </select>
+      </div>
+   </div>
+   <div class="form-group row">
+    <div class="col-sm-2">Trial Line</div>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="1" id="trial" name="trial" <?php if($isTrial == 1){ echo "checked";} ?> >
+      </div>
+    </div>
+  </div>
    
-    <script>
-        $('#select_all').click(function() {
-            $('#countries option').prop('selected', true);
-        });
-        $('#unselect_all').click(function() {
-            $('#countries option').prop('selected', false);
-        });
-    </script>
- <?php
 
-include('footer.php');
+  <div class="form-group row" id="AllowedIPs " >
+    <label for="AllowedIPs " class="col-sm-2 col-form-label">Allowed IPs:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="AllowedIPs" name="AllowedIPs" value="<?php echo $allowedIps; ?>"  placeholder="">
+    </div>
+  </div>
+  <div class="form-group row" id="AllowedDevice" >
+    <label for="AllowedDevice" class="col-sm-2 col-form-label">Allowed device:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="AllowedDevice" name="AllowedDevice" value="<?php echo $allowedUa; ?>"  placeholder="">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-2">Restreamer</div>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="1" id="Restreamer" name="Restreamer" <?php if($isRestreamer == 1){ echo "checked";} ?> >
+      </div>
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-2">Bypass Limitation</div>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="1" id="Bypass" name="Bypass" <?php if($bypassUa == 1){ echo "checked";} ?> >
+      </div>
+    </div>
+  </div>
+  <div class="form-group row" id="MaxCon" >
+    <label for="MaxCon" class="col-sm-2 col-form-label">Max Connection:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="MaxCon" name="maxConnections" value="<?php echo $maxConnections ; ?>" name="MaxCon" placeholder="">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-2">Unlimited</div>
+    <div class="col-sm-10">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="1" id="expDateNull" name="expDateNull" <?php if($expDateNull == null){ echo "checked";} ?> >
+      </div>
+    </div>
+  </div>
+  <div class="form-group row" id="ExpDate">
+    <label for="PassWord" class="col-sm-2 col-form-label">Expire Date :</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="ExpDate" name="ExpDate"  value="<?php echo $expDate; ?>" placeholder="">
+    </div>
+  </div>
+  <div class="form-group row" id="AdminNote">
+    <label for="AdminNote" class="col-sm-2 col-form-label">Admin Note :</label>
+    <div class="col-sm-10">
+    <textarea class="form-control"  id="AdminNote" name="AdminNote" rows="3"><?php echo  $adminNotes  ;?></textarea>
+    </div>
+  </div>
+  <div class="form-group row" id="ResNote">
+    <label for="ResNote" class="col-sm-2 col-form-label">Reseller Note :</label>
+    <div class="col-sm-10">
+    <textarea class="form-control"  id="ResNote" name="ResNote" rows="3"><?php echo   $resNotes ;?></textarea>
+    </div>
+  </div>
+  <div class="form-group row" style="height:250px;">
+   
+   <label class="col-sm-2 col-form-label" for="bouquet">Bouquet:</label>
+   <div class="col-sm-10">
+   <select multiple class="form-control h-100" id="bouquet"  name="bouquet[]">
+     <?php
+     $catagories = "SELECT * FROM `bouquets`";
+     $result = mysqli_query($db,$catagories);
+     if ($result->num_rows > 0) {
+         while ($row = $result->fetch_assoc()) {
+            $bouqSec='';
+             if(in_array($row[id],  $bouquetarr)){
+                $bouqSec="selected";
+             }
+             echo "<option value='". $row[id]."'  $bouqSec>". $row[bouquet_name]."</option>";
+         }
+     }
+     ?>
+   </select>
+   </div>
+</div>
 
-?>
+ 
 
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-primary" value="upload">Edit Line</button>
+    </div>
+  </div>
+</form>
+
+
+
+<?php include('footer.php'); ?>

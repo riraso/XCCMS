@@ -9,6 +9,8 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+   
+
    </head>
    
    <body>
@@ -33,9 +35,19 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link active mt-5" href="welcome.php">
+                <a class="nav-link active mt-5" href="index.php">
                  
                 <i class="fa fa-home fa-lg" ></i> Dashboard <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="online.php">
+                <i class="fa fa-user fa-lg"></i> Online Connection
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="linelist.php">
+                <i class="fa fa-user fa-lg"></i> Line List
                 </a>
               </li>
               <li class="nav-item">
@@ -43,12 +55,16 @@
                 <i class="fa fa-user fa-lg"></i> Add line
                 </a>
               </li>
+			   <li class="nav-item">
+                <a class="nav-link" href="maglist.php"><i class="fa fa-tablet fa-lg"></i> MAG List
+                </a>
+              </li>
               <li class="nav-item">
                 <a class="nav-link" href="addmag.php"><i class="fa fa-tablet fa-lg"></i> Add MAG
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="streamss.php">
+                <a class="nav-link" href="streamlist.php">
                 <i class="fa fa-list-alt fa-lg"></i> Stream list
                 </a>
               </li>

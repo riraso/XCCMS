@@ -58,23 +58,7 @@ include('header.php');
       </select>
       </div>
    </div>
-  <div class="form-group row">
-    <div class="col-sm-2">On Demand</div>
-    <div class="col-sm-10">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="Ondemand" name="Ondemand">
-        <label class="form-check-label" for="Ondemand">
-          Enable Ondemand
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="form-group row">
-    <label for="probesize ondemand" class="col-sm-2 col-form-label">probesize ondemand:</label>
-    <div class="col-sm-10">
-      <input type="number" class="form-control" id="probesize ondemand" name="probesize" placeholder="" value='12800'>
-    </div>
-  </div>
+ 
   <div class="form-group row">
    
    <label class="col-sm-2 col-form-label" for="Serverid">Server :</label>
@@ -97,12 +81,13 @@ include('header.php');
       <label class="col-sm-2 col-form-label" for="transcodeprofileid">transcode profile:</label>
       <div class="col-sm-10">
       <select class="custom-select " id="transcodeprofileid" name="transcodeprofileid">
+      <option value='0' selected>No transcoded</option>"
       <?php
         $transcoding = "SELECT * FROM `transcoding_profiles`";
         $result = mysqli_query($db,$transcoding);
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo "<option value='". $row[profile_id]."' selected>". $row[profile_name]."</option>";
+                echo "<option value='". $row[profile_id]."' >". $row[profile_name]."</option>";
             }
         }
         ?>

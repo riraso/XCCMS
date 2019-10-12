@@ -45,14 +45,14 @@ if ($action== 'modify') {
   <div class="form-group row" id="UserId">
     <label for="UserId" class="col-sm-2 col-form-label">User ID:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" readonly id="UserId" name="UserId"  value="" placeholder="">
+      <input type="text" class="form-control" readonly id="UserId" name="UserId"  value="<?php echo $userID; ?>" placeholder="">
   
     </div>
   </div>
   <div class="form-group row" id="mac">
     <label for="mac" class="col-sm-2 col-form-label">MAC Address:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" readonly id="mac" name="mac"  value="" placeholder="">
+      <input type="text" class="form-control" readonly id="mac" name="mac"  value="<?php echo $mac; ?>" placeholder="">
   
     </div>
   </div>

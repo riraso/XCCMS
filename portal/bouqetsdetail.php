@@ -10,16 +10,16 @@
    ?>
 
     <?php
-               $sql1 =  "SELECT * FROM `bouquets` where id=$bq_Id ";
+               $sql1 =  "SELECT * FROM `bouquets`  where id=$bq_Id ";
                $result = mysqli_query($db, $sql1);
                if ($result->num_rows > 0) {
                      while ($row = $result->fetch_assoc()) {
                          $bq_ch_Id=json_decode($row['bouquet_channels']);
-                         $bq_ch_Id =  implode("','",$bq_ch_Id);
+                         $bq_ch_Id=str_ireplace("'", "", implode("','",$bq_ch_Id));
                         
                      }
                }
-               $sql2 =  "SELECT * FROM `streams` where id in ('".$bq_ch_Id."') ";
+               $sql2="SELECT  b.id ,b.stream_display_name FROM bouquets a left join streams b on b.id in ($bq_ch_Id) where a.id=$bq_Id ORDER BY FIELD(b.id,$bq_ch_Id)";
                $result2 = mysqli_query($db, $sql2);
                if ($result2->num_rows > 0) {
                    while ($row = $result2->fetch_assoc()) {
